@@ -25,12 +25,13 @@ Speed run del trabajo. Objetivo: El 4.0
 5. Abrir el MyphpAdmin de XAMPP haciendo click en "admin" en MYsql XAMPP
 6. Apretar en la seccion importar y seleccionar el archivo ferremas.sql
 
-7. Ejecutar programa con: uvicorn app.main:app --reload
+7. Abrir dos terminales, en una usar ngrok.exe con el codigo: ngrok https 8000  
+7.1 Ejecutar programa con: .\start_ferreplus.bat
 
 8. Disfruta :)
 
 9. (Puede ser que haya que instalar el pip transbank-sdk)
-10. (Falta averiguar si la carpeta transbank es necesaria, ya que si se puede instalar el sdk quizas no haga falta)
+
 
 Objetivos: 
 .Falta comprobar si los endpoints se guardan en la base de datos
