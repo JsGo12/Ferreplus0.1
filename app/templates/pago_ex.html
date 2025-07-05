@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado del Pago</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .success {
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+        }
+        .error {
+            color: #f44336;
+            border: 2px solid #f44336;
+        }
+        .failed {
+            color: #ff9800;
+            border: 2px solid #ff9800;
+        }
+        .loading {
+            color: #2196F3;
+            border: 2px solid #2196F3;
+        }
+        .icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .details {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .debug-info {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 12px;
+            color: #666;
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container loading" id="result-container">
+        <div class="icon spinner" id="status-icon">⏳</div>
+        <h1 id="status-title">Procesando...</h1>
+        <p id="status-message">Verificando resultado del pago...</p>
+        <div class="details" id="payment-details" style="display: none;"></div>
+        <div class="debug-info" id="debug-info" style="display: none;"></div>
+        <a href="/" class="button" id="return-button" style="display: none;">Volver al Inicio</a>
+    </div>
+
+    <script>
+        // Función para mostrar información de debug
+        function showDebugInfo(info) {
+            const debugEl = document.getElementById('debug-info');
+            debugEl.innerHTML = `<strong>Debug:</strong> ${info}`;
+            debugEl.style.display = 'block';
+        }
+
+        // Función para procesar el resultado
+        function processPaymentResult() {
+            console.log('🔄 Iniciando procesamiento del resultado...');
+            
+            // Obtener parámetros de la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const allParams = Object.fromEntries(urlParams);
+            
+            console.log('📋 Parámetros recibidos:', allParams);
+            showDebugInfo(`URL: ${window.location.href}`);
+            
+            // Elementos DOM
+            const container = document.getElementById('result-container');
+            const icon = document.getElementById('status-icon');
+            const title = document.getElementById('status-title');
+            const messageEl = document.getElementById('status-message');
+            const details = document.getElementById('payment-details');
+            const returnButton = document.getElementById('return-button');
+            
+            // Verificar que los elementos existan
+            if (!container || !icon || !title || !messageEl || !details || !returnButton) {
+                console.error('❌ Elementos DOM no encontrados');
+                return;
+            }
+            
+            // Obtener parámetros específicos
+            const status = urlParams.get('status');
+            const message = urlParams.get('message');
+            const authCode = urlParams.get('authorization_code');
+            const amount = urlParams.get('amount');
+            const orderId = urlParams.get('order_id') || urlParams.get('buy_order');
+            const responseCode = urlParams.get('response_code');
+            const errorDetail = urlParams.get('error_detail');
+            
+            // También verificar parámetros de Webpay estándar
+            const token = urlParams.get('token_ws') || urlParams.get('token');
+            const tbkToken = urlParams.get('TBK_TOKEN');
+            const tbkOrdenCompra = urlParams.get('TBK_ORDEN_COMPRA');
+            
+            console.log('🔍 Parámetros específicos:', {
+                status, message, authCode, amount, orderId, responseCode, 
+                errorDetail, token, tbkToken, tbkOrdenCompra
+            });
+            
+            // Timeout para evitar quedarse en "Procesando..." indefinidamente
+            setTimeout(() => {
+                if (container.classList.contains('loading')) {
+                    console.warn('⏰ Timeout: Cambiando a estado de error por timeout');
+                    showError('Timeout al procesar el resultado');
+                }
+            }, 5000);
+            
+            // Determinar el estado del pago
+            if (status) {
+                // Usar el parámetro status si está disponible
+                handlePaymentStatus(status, message, authCode, amount, orderId, responseCode, errorDetail);
+            } else if (token || tbkToken) {
+                // Si hay token de Webpay, probablemente fue exitoso
+                console.log('✅ Token encontrado, asumiendo pago exitoso');
+                handlePaymentStatus('success', 'Pago procesado correctamente', null, amount, orderId || tbkOrdenCompra);
+            } else if (tbkOrdenCompra) {
+                // Si hay TBK_ORDEN_COMPRA sin token, probablemente fue cancelado
+                console.log('❌ Orden sin token, asumiendo pago cancelado');
+                handlePaymentStatus('failed', 'Pago cancelado por el usuario', null, null, tbkOrdenCompra);
+            } else if (window.location.search.length === 0) {
+                // Sin parámetros
+                console.warn('⚠️ Sin parámetros en la URL');
+                showError('No se recibió información sobre el estado del pago');
+            } else {
+                // Parámetros desconocidos
+                console.warn('❓ Parámetros no reconocidos');
+                showUnknownState(allParams);
+            }
+            
+            function handlePaymentStatus(status, message, authCode, amount, orderId, responseCode, errorDetail) {
+                console.log(`🎯 Manejando estado: ${status}`);
+                
+                switch(status) {
+                    case 'success':
+                    case 'AUTHORIZED':
+                        showSuccess(message, authCode, amount, orderId);
+                        break;
+                    case 'failed':
+                    case 'FAILED':
+                        showFailed(message, responseCode, orderId);
+                        break;
+                    case 'error':
+                    case 'ERROR':
+                        showError(message, errorDetail);
+                        break;
+                    default:
+                        showUnknownState({status, message, authCode, amount, orderId, responseCode, errorDetail});
+                        break;
+                }
+            }
+            
+            function showSuccess(message, authCode, amount, orderId) {
+                container.className = 'container success';
+                icon.textContent = '✅';
+                icon.classList.remove('spinner');
+                title.textContent = 'Pago Exitoso';
+                messageEl.textContent = message || 'Su pago ha sido procesado correctamente.';
+                
+                if (authCode || amount || orderId) {
+                    details.style.display = 'block';
+                    let detailsHTML = '<h3>Detalles de la Transacción:</h3>';
+                    if (orderId) detailsHTML += `<p><strong>Orden de Compra:</strong> ${orderId}</p>`;
+                    if (authCode) detailsHTML += `<p><strong>Código de Autorización:</strong> ${authCode}</p>`;
+                    if (amount) detailsHTML += `<p><strong>Monto:</strong> ${parseFloat(amount).toLocaleString('es-CL')} CLP</p>`;
+                    detailsHTML += `<p><strong>Fecha:</strong> ${new Date().toLocaleString('es-CL')}</p>`;
+                    details.innerHTML = detailsHTML;
+                }
+                
+                returnButton.style.display = 'inline-block';
+                console.log('✅ Pago exitoso mostrado');
+            }
+            
+            function showFailed(message, responseCode, orderId) {
+                container.className = 'container failed';
+                icon.textContent = '⚠️';
+                icon.classList.remove('spinner');
+                title.textContent = 'Pago Rechazado';
+                messageEl.textContent = message || 'Su pago ha sido rechazado por el banco.';
+                
+                if (responseCode || orderId) {
+                    details.style.display = 'block';
+                    let detailsHTML = '<h3>Detalles del Rechazo:</h3>';
+                    if (orderId) detailsHTML += `<p><strong>Orden de Compra:</strong> ${orderId}</p>`;
+                    if (responseCode) detailsHTML += `<p><strong>Código de Respuesta:</strong> ${responseCode}</p>`;
+                    detailsHTML += `<p><strong>Sugerencia:</strong> Verifique los datos de su tarjeta e intente nuevamente.</p>`;
+                    details.innerHTML = detailsHTML;
+                }
+                
+                returnButton.style.display = 'inline-block';
+                console.log('⚠️ Pago fallido mostrado');
+            }
+            
+            function showError(message, errorDetail) {
+                container.className = 'container error';
+                icon.textContent = '❌';
+                icon.classList.remove('spinner');
+                title.textContent = 'Error en el Pago';
+                messageEl.textContent = message || 'Ha ocurrido un error al procesar su pago.';
+                
+                if (errorDetail) {
+                    details.style.display = 'block';
+                    details.innerHTML = `
+                        <h3>Detalles del Error:</h3>
+                        <p><strong>Error:</strong> ${decodeURIComponent(errorDetail)}</p>
+                        <p><strong>Sugerencia:</strong> Intente nuevamente o contacte al soporte técnico.</p>
+                    `;
+                }
+                
+                returnButton.style.display = 'inline-block';
+                console.log('❌ Error mostrado');
+            }
+            
+            function showUnknownState(params) {
+                container.className = 'container error';
+                icon.textContent = '❓';
+                icon.classList.remove('spinner');
+                title.textContent = 'Estado Desconocido';
+                messageEl.textContent = 'No se pudo determinar el estado del pago.';
+                
+                details.style.display = 'block';
+                details.innerHTML = `
+                    <h3>Información de Debug:</h3>
+                    <p><strong>URL completa:</strong> ${window.location.href}</p>
+                    <p><strong>Parámetros:</strong> ${JSON.stringify(params, null, 2)}</p>
+                `;
+                
+                returnButton.style.display = 'inline-block';
+                console.log('❓ Estado desconocido mostrado');
+            }
+        }
+        
+        // Ejecutar cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM cargado, iniciando procesamiento...');
+            
+            // Pequeño delay para asegurar que todo esté listo
+            setTimeout(processPaymentResult, 100);
+        });
+        
+        // Backup: ejecutar también en window.load
+        window.addEventListener('load', function() {
+            console.log('🏁 Página completamente cargada');
+            
+            // Solo ejecutar si aún estamos en estado de carga
+            const container = document.getElementById('result-container');
+            if (container && container.classList.contains('loading')) {
+                console.log('🔄 Ejecutando procesamiento de respaldo...');
+                processPaymentResult();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+/* ==========================
+   Estilos generales (Registro)
+========================== */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Imagen de fondo local */
+  background-image: url('fondos/fondologin.jpg'); /* Ajusta según tu ruta */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  color: #2c3e50;
+}
+
+/* ==========================
+   Tarjeta de Registro
+========================== */
+.card {
+  border-radius: 1rem;
+  border: none;
+
+  /* Fondo transparente con blur igual que login */
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+  color: #111;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  max-width: 450px;
+  width: 100%;
+
+  padding: 2.5rem 2rem;
+}
+
+/* ==========================
+   Títulos y textos
+========================== */
+h2 {
+  font-weight: bold;
+  color: #0d6efd;
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #222;
+}
+
+/* ==========================
+   Inputs
+========================== */
+.form-control {
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid #ccc;
+  color: #333;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-color: #0d6efd;
+  color: #111;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  outline: none;
+}
+
+.form-text {
+  font-size: 0.85rem;
+  color: #000000;
+}
+
+/* ==========================
+   Botones
+========================== */
+.btn-success {
+  border-radius: 30px;
+  font-weight: bold;
+  background-color: #0d6efd;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.btn-success:hover {
+  background-color: #084298;
+}
+
+.btn-link {
+  font-weight: 600;
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* ==========================
+   Responsive
+========================== */
+@media (max-width: 576px) {
+  .card {
+    padding: 2rem 1.5rem;
+  }
+
+  .btn-success {
+    font-size: 0.95rem;
+  }
+}

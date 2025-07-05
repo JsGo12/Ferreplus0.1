@@ -1,0 +1,192 @@
+/* ==========================
+   Estilos generales
+========================== */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Imagen de fondo local */
+  background-image: url('fondos/fondologin.jpg'); /* Ajusta según tu ruta */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  color: #2c3e50;
+}
+
+/* ==========================
+   Tarjeta de Login
+========================== */
+.login-card {
+  border-radius: 1rem;
+  border: none;
+
+  /* Fondo transparente con blur */
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+  color: #111;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  max-width: 450px;
+  width: 100%;
+
+  padding: 2.5rem 2rem;
+}
+
+/* ==========================
+   Logo
+========================== */
+.brand-logo {
+  font-size: 2.5rem;
+  color: #0d6efd;
+}
+
+/* ==========================
+   Inputs e Iconos
+========================== */
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 30%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: #6c757d;
+  pointer-events: none;
+}
+
+.with-icon {
+  padding-left: 2.8rem !important;
+}
+
+.form-floating-icon {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 30%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* ==========================
+   Inputs estilo para mejor lectura sobre fondo transparente
+========================== */
+.form-control {
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid #ccc;
+  color: #333;
+  border-radius: 0.375rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-color: #0d6efd;
+  color: #111;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  outline: none;
+}
+
+.form-label {
+  color: #222;
+  user-select: none;
+}
+
+/* ==========================
+   Botones
+========================== */
+.btn-login {
+  border-radius: 30px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.btn-login .loading-spinner {
+  display: none;
+}
+
+.btn-login:hover {
+  background-color: #084298;
+}
+
+/* Botón Crear Cuenta */
+.btn-register {
+  border-radius: 30px;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #0d6efd;
+  border: 1px solid rgba(13, 110, 253, 0.5);
+  transition: background-color 0.3s, color 0.3s;
+  text-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.btn-register:hover {
+  background-color: rgba(13, 110, 253, 0.85);
+  color: white;
+  border-color: #0d6efd;
+  text-shadow: none;
+}
+
+/* ==========================
+   Alertas personalizadas
+========================== */
+.alert-custom {
+  font-size: 0.9rem;
+  border-radius: 0.75rem;
+}
+
+/* ==========================
+   Botón Volver al inicio
+========================== */
+.btn-outline-secondary {
+  border-radius: 20px;
+  font-size: 0.85rem;
+  padding: 0.4rem 1rem;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #444;
+  text-shadow: 0 0 4px rgba(0,0,0,0.3);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-outline-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  color: #222;
+  border-color: rgba(255, 255, 255, 0.7);
+  text-shadow: none;
+}
+
+/* ==========================
+   Texto "¿No tienes cuenta?"
+========================== */
+.text-center.my-3 span.text-muted {
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+/* ==========================
+   Responsive
+========================== */
+@media (max-width: 576px) {
+  .login-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .btn-login,
+  .btn-register {
+    font-size: 0.95rem;
+  }
+}

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Finalizar Compra - Ferremas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="static/fondos/Logo.png">
+<link rel="shortcut icon" type="image/x-icon" href="static/fondos/Logo.png">
+<link rel="apple-touch-icon" href="static/fondos/Logo.png">
+  <style>
+    /* Navbar grande inicial */
+    #mainNavbar {
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+      transition: padding 0.3s ease;
+    }
+    /* Texto y logo más grande */
+    #mainNavbar .navbar-brand span {
+      font-size: 1.5rem;
+      transition: font-size 0.3s ease;
+    }
+    /* Transición para logo tamaño original */
+    #mainNavbar .navbar-brand img {
+      width: 40px;
+      height: 40px;
+      transition: width 0.3s ease, height 0.3s ease;
+    }
+    /* Cuando se hace scroll, navbar se reduce */
+    #mainNavbar.shrink {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    #mainNavbar.shrink .navbar-brand span {
+      font-size: 1.2rem;
+    }
+    /* Ajuste del logo en shrink */
+    #mainNavbar.shrink .navbar-brand img {
+      width: 30px;
+      height: 30px;
+    }
+
+    body {
+      background-color: #f8f9fa;
+    }
+    main {
+      max-width: 600px;
+      margin: 3rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+  <div class="container-fluid">
+    <span id="usuarioBienvenida" class="navbar-text text-white me-auto"></span>
+    <a class="navbar-brand d-flex align-items-center position-absolute top-50 start-50 translate-middle" href="/">
+      <img src="static/fondos/Logo.png" alt="Logo Ferremas" class="d-inline-block align-text-top me-2" />
+      <span class="fw-bold">Ferremas</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <h2 class="mb-4 text-center">Finalizar Compra</h2>
+
+  <form id="formFinalizarCompra" novalidate> <!-- Removed action and method for fetch API -->
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre Completo</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" required />
+      <div class="invalid-feedback">Por favor ingresa tu nombre completo.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="rut" class="form-label">RUT</label>
+      <input
+        type="text"
+        class="form-control"
+        id="rut"
+        name="rut"
+        placeholder="12345678-9"
+        required
+      />
+      <div class="form-text">Formato esperado: 12345678-9 o 12345678-K</div>
+      <div class="invalid-feedback" id="rutFeedback">Por favor ingresa un RUT válido.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Correo Electrónico</label>
+      <input type="email" class="form-control" id="email" name="email" placeholder="correo@ejemplo.com" required />
+      <div class="invalid-feedback">Por favor ingresa un correo válido.</div>
+    </div>
+
+    <fieldset class="mb-3">
+      <legend class="col-form-label pt-0">¿Deseas despacho o retiro en tienda?</legend>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="envio"
+          id="despacho"
+          value="despacho"
+          required
+        />
+        <label class="form-check-label" for="despacho">Despacho</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="envio"
+          id="retiro"
+          value="retiro"
+          required
+        />
+        <label class="form-check-label" for="retiro">Retiro en tienda</label>
+      </div>
+      <div class="invalid-feedback">Por favor selecciona una opción.</div>
+    </fieldset>
+
+    <div class="mb-3" id="direccionContainer" style="display: none;">
+      <label for="direccion" class="form-label">Dirección de despacho</label>
+      <textarea class="form-control" id="direccion" name="direccion" rows="3"></textarea>
+      <div class="invalid-feedback">Por favor ingresa la dirección para el despacho.</div>
+    </div>
+
+    <div class="text-end mt-4">
+      <strong>Total a pagar: </strong><span id="totalVisual">$0</span>
+    </div>
+
+
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-secondary w-45" id="btnCancelar">Cancelar</button>
+      <button type="submit" class="btn btn-primary w-45">Finalizar Compra</button>
+    </div>
+
+    <input type="hidden" name="total" id="totalHidden">
+    
+  
+  </form>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const form = document.getElementById('formFinalizarCompra');
+  const despachoRadio = document.getElementById('despacho');
+  const retiroRadio = document.getElementById('retiro');
+  const direccionContainer = document.getElementById('direccionContainer');
+  const direccionInput = document.getElementById('direccion');
+  const rutInput = document.getElementById('rut');
+  const rutFeedback = document.getElementById('rutFeedback');
+  const btnCancelar = document.getElementById('btnCancelar');
+
+
+
+  // Mostrar u ocultar campo Dirección según envío
+  function toggleDireccion() {
+    if (despachoRadio.checked) {
+      direccionContainer.style.display = 'block';
+      direccionInput.setAttribute('required', 'required');
+    } else {
+      direccionContainer.style.display = 'none';
+      direccionInput.removeAttribute('required');
+      direccionInput.classList.remove('is-invalid');
+    }
+  }
+
+  despachoRadio.addEventListener('change', toggleDireccion);
+  retiroRadio.addEventListener('change', toggleDireccion);
+
+  // Validación básica de formato RUT (sin cálculo dígito verificador)
+  function validarRut(rut) {
+    const regex = /^\d{7,8}-[\dKk]$/;
+    return regex.test(rut);
+  }
+
+  rutInput.addEventListener('input', () => {
+    if (rutInput.value === '' || validarRut(rutInput.value)) {
+      rutInput.classList.remove('is-invalid');
+      rutFeedback.style.display = 'none';
+    } else {
+      rutInput.classList.add('is-invalid');
+      rutFeedback.style.display = 'block';
+    }
+  });
+
+  form.addEventListener('submit', async (event) => { // Added 'async'
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!validarRut(rutInput.value)) {
+      rutInput.classList.add('is-invalid');
+      rutInput.focus();
+      return;
+    }
+
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+      return;
+    }
+
+    form.classList.remove('was-validated');
+    
+    // Insertar el total en el input oculto antes de enviar
+    const total = localStorage.getItem("totalCompra");
+    document.getElementById("totalHidden").value = total || 0;
+
+    // --- NEW: Fetch API for form submission with JWT ---
+    const accessToken = localStorage.getItem('access_token'); // Get token from localStorage
+
+    if (!accessToken) {
+        alert('Debes iniciar sesión para finalizar la compra.'); // Use a custom modal in production
+        window.location.href = '/login'; // Redirect to login
+        return;
+    }
+
+    const formData = new FormData(form);
+    formData.append("carrito", localStorage.getItem("carrito"));
+    console.log("Carrito enviado:", localStorage.getItem("carrito"));
+
+
+    try {
+        const response = await fetch('/webpay/iniciar', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}` // Add Authorization header
+            },
+            body: formData // Send FormData as body
+        });
+
+        if (response.ok) {
+            const htmlContent = await response.text();
+            document.open(); // Open a new document to write the response HTML
+            document.write(htmlContent);
+            document.close();
+            // The HTML content from the server already contains the script to submit to Webpay
+        } else if (response.status === 401) { // Handle 401 Unauthorized specifically
+            alert('Tu sesión ha expirado o no estás autorizado. Por favor, inicia sesión nuevamente.');
+            localStorage.removeItem('access_token'); // Clear invalid token
+            // Optionally, clear other user-related localStorage items if you have them
+            window.location.href = '/login'; // Redirect to login page
+        }
+        else {
+            const errorText = await response.text();
+            alert(`Error al iniciar el pago: ${response.status} - ${errorText}`); // Show other errors
+            console.error('Error response:', errorText);
+        }
+    } catch (error) {
+        console.error('Error en la solicitud Fetch:', error);
+        alert('Ocurrió un error de red al intentar iniciar el pago.');
+    }
+    // --- END NEW ---
+  });
+
+  btnCancelar.addEventListener('click', () => {
+    window.location.href = '/';
+  });
+
+
+  window.onload = () => {
+  toggleDireccion();
+
+  // Obtener y mostrar el total
+  const total = parseFloat(localStorage.getItem("totalCompra")) || 0;
+
+  const spanTotal = document.getElementById("totalVisual");
+
+  if (total && spanTotal) {
+    spanTotal.textContent = `$${parseInt(total).toLocaleString()}`;
+  } else {
+    spanTotal.textContent = "$0";
+  }
+};
+
+
+
+
+  window.addEventListener("scroll", () => {
+    const navbar = document.getElementById("mainNavbar");
+    if (window.scrollY > 50) {
+      navbar.classList.add("shrink");
+    } else {
+      navbar.classList.remove("shrink");
+    }
+  });
+</script>
+
+</body>
+</html>

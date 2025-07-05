@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ferremas – Perfil</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="static/fondos/Logo.png">
+<link rel="shortcut icon" type="image/x-icon" href="static/fondos/Logo.png">
+<link rel="apple-touch-icon" href="static/fondos/Logo.png">
+  <style>
+   body {
+  background-color: #f0f4fa;
+  background-image:
+    linear-gradient(30deg, #c8d9f1 12%, transparent 12.5%, transparent 87%, #c8d9f1 87.5%, #c8d9f1),
+    linear-gradient(150deg, #c8d9f1 12%, transparent 12.5%, transparent 87%, #c8d9f1 87.5%, #c8d9f1),
+    linear-gradient(30deg, #c8d9f1 12%, transparent 12.5%, transparent 87%, #c8d9f1 87.5%, #c8d9f1),
+    linear-gradient(150deg, #c8d9f1 12%, transparent 12.5%, transparent 87%, #c8d9f1 87.5%, #c8d9f1),
+    linear-gradient(60deg, #e8efff 25%, transparent 25.5%, transparent 75%, #e8efff 75%, #e8efff),
+    linear-gradient(120deg, #e8efff 25%, transparent 25.5%, transparent 75%, #e8efff 75%, #e8efff);
+  background-size: 80px 140px;
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+    #mainNavbar {
+      padding: 1.5rem 1rem;
+      transition: padding 0.3s ease;
+    }
+
+    #mainNavbar.shrink {
+      padding: 0.5rem 1rem;
+    }
+
+    .navbar-brand span {
+      font-size: 1.5rem;
+      transition: font-size 0.3s ease;
+    }
+
+    .navbar-brand img {
+      width: 40px;
+      height: 40px;
+      transition: width 0.3s ease, height 0.3s ease;
+    }
+
+    #mainNavbar.shrink .navbar-brand span {
+      font-size: 1.2rem;
+    }
+
+    #mainNavbar.shrink .navbar-brand img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border-radius: 1rem;
+      border: none;
+    }
+
+    .img-thumbnail {
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-outline-secondary {
+      color: #6c757d;
+      border-color: #6c757d;
+    }
+
+    .btn-outline-secondary:hover {
+      background-color: #6c757d;
+      color: #fff;
+    }
+
+    h1, h2 {
+      font-weight: 600;
+    }
+
+    footer {
+      background-color: #343a40;
+    }
+
+    table th, table td {
+      vertical-align: middle;
+    }
+
+    .alert-success, .alert-danger {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container-fluid">
+      <span id="usuarioBienvenida" class="navbar-text text-white me-auto"></span>
+      <a class="navbar-brand d-flex align-items-center position-absolute top-50 start-50 translate-middle" href="/">
+        <img src="static/fondos/Logo.png" alt="Logo Ferremas" class="me-2" />
+        <span class="fw-bold">Ferremas</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link active" href="/perfil">Perfil</a></li>
+          <li class="nav-item"><a class="nav-link text-danger" href="#" id="cerrarSesion">Cerrar sesión</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container my-5">
+    <section class="mb-5">
+      <h1 id="tituloPerfil" class="mb-4 text-center">Perfil</h1>
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <form id="perfilForm" class="card shadow p-4 needs-validation" novalidate>
+           <div class="text-center mb-3 position-relative d-inline-block">
+  <div class="foto-container rounded-circle overflow-hidden position-relative">
+    <img id="fotoPreview"
+      src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+      class="img-thumbnail mb-2"
+      alt="Foto de perfil"
+      style="cursor: pointer;" />
+    <div class="foto-overlay d-flex justify-content-center align-items-center">
+      <span class="text-white fw-bold">Cambiar foto</span>
+    </div>
+  </div>
+  <input type="file" id="foto" class="form-control d-none" accept="image/*" />
+  <div class="d-grid justify-content-center">
+    <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="quitarFoto">Quitar foto</button>
+  </div>
+
+              <div class="form-text mt-1">Foto de perfil (opcional)</div>
+            </div>
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre completo</label>
+              <input type="text" id="nombre" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo electrónico</label>
+              <input type="email" id="email" class="form-control" readonly />
+            </div>
+            <div class="mb-3">
+              <label for="telefono" class="form-label">Teléfono</label>
+              <input type="tel" id="telefono" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label for="direccion" class="form-label">Dirección</label>
+              <textarea id="direccion" class="form-control" rows="1"></textarea>
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Guardar cambios</button>
+            <div id="alertGuardado" class="alert alert-success mt-3 d-none" role="alert">
+              Datos guardados correctamente ✔
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="mb-4 text-center">Historial de Compras</h2>
+      <div class="table-responsive shadow-sm rounded">
+        <table class="table table-striped table-hover bg-white border rounded">
+          <thead class="table-dark">
+            <tr>
+              <th>#</th>
+              <th>Fecha</th>
+              <th>Productos</th>
+              <th class="text-end">Total</th>
+            </tr>
+          </thead>
+          <tbody id="tablaCompras"></tbody>
+        </table>
+      </div>
+      <div id="sinCompras" class="alert alert-info text-center mt-3 d-none" role="alert">
+        Aún no hay compras registradas. <a href="/" class="alert-link">Explora productos</a>.
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center py-4 text-white">
+    <small>© 2025 Ferremas. Todos los derechos reservados.</small>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    class PerfilManager {
+      constructor() {
+        this.usuario = null;
+        this.usuarioEmail = null;
+        this.PERFIL_KEY = null;
+        this.COMPRAS_KEY = null;
+        this.elementos = {};
+        this.init();
+      }
+
+      init() {
+        try {
+          this.verificarAutenticacion();
+          this.inicializarClaves();
+          this.cachearElementos();
+          this.configurarEventListeners();
+          this.cargarDatos();
+        } catch {
+          this.redirigirLogin();
+        }
+      }
+
+      verificarAutenticacion() {
+        const usuarioData = localStorage.getItem('usuarioLogueado');
+        if (!usuarioData) throw new Error();
+        this.usuario = JSON.parse(usuarioData);
+        if (!this.usuario?.email) throw new Error();
+      }
+
+      inicializarClaves() {
+        this.usuarioEmail = this.usuario.email;
+        this.PERFIL_KEY = `perfil_${this.usuarioEmail}`;
+        this.COMPRAS_KEY = `compras_${this.usuarioEmail}`;
+      }
+
+      cachearElementos() {
+        const ids = [
+          'nombre', 'email', 'telefono', 'direccion', 'foto',
+          'fotoPreview', 'alertGuardado', 'perfilForm',
+          'cerrarSesion', 'tablaCompras', 'sinCompras', 'tituloPerfil', 'quitarFoto'
+        ];
+        ids.forEach(id => this.elementos[id] = document.getElementById(id));
+      }
+
+      configurarEventListeners() {
+        this.elementos.foto?.addEventListener('change', e => this.manejarCambioFoto(e));
+        this.elementos.fotoPreview?.addEventListener('click', () => {
+    this.elementos.foto.click();
+  });
+        this.elementos.perfilForm?.addEventListener('submit', e => this.guardarPerfil(e));
+        this.elementos.cerrarSesion?.addEventListener('click', e => this.cerrarSesion(e));
+        this.elementos.quitarFoto?.addEventListener('click', () => this.quitarFoto());
+        window.addEventListener('scroll', () => {
+          const nav = document.getElementById('mainNavbar');
+          nav.classList.toggle('shrink', window.scrollY > 50);
+        });
+      }
+
+      cargarDatos() {
+        this.cargarPerfil();
+        this.mostrarCompras();
+      }
+
+      cargarPerfil() {
+        const datos = JSON.parse(localStorage.getItem(this.PERFIL_KEY)) || {};
+        const dfltImg = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+
+        this.elementos.nombre.value = datos.nombre || '';
+        this.elementos.email.value = this.usuarioEmail;
+        this.elementos.telefono.value = datos.telefono || '';
+        this.elementos.direccion.value = datos.direccion || '';
+        this.elementos.fotoPreview.src = datos.foto || dfltImg;
+        this.elementos.tituloPerfil.textContent = datos.nombre ? `Perfil de ${datos.nombre}` : 'Perfil';
+      }
+
+      manejarCambioFoto(e) {
+        const file = e.target.files[0];
+        if (!file || !file.type.startsWith('image/') || file.size > 5 * 1024 * 1024) {
+          return this.mostrarError('Selecciona una imagen válida (máx. 5MB)');
+        }
+        const reader = new FileReader();
+        reader.onload = ev => this.elementos.fotoPreview.src = ev.target.result;
+        reader.onerror = () => this.mostrarError('Error al cargar la imagen');
+        reader.readAsDataURL(file);
+      }
+
+      quitarFoto() {
+        const dfltImg = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+        this.elementos.fotoPreview.src = dfltImg;
+        this.elementos.foto.value = '';
+      }
+
+      guardarPerfil(e) {
+        e.preventDefault();
+        if (!this.elementos.perfilForm.checkValidity()) {
+          this.elementos.perfilForm.classList.add('was-validated');
+          return;
+        }
+        const perfil = {
+          nombre: this.elementos.nombre.value.trim(),
+          email: this.usuarioEmail,
+          telefono: this.elementos.telefono.value.trim(),
+          direccion: this.elementos.direccion.value.trim(),
+          foto: this.elementos.fotoPreview.src,
+          fechaActualizacion: new Date().toISOString()
+        };
+        localStorage.setItem(this.PERFIL_KEY, JSON.stringify(perfil));
+        this.actualizarUsuarioLogueado(perfil);
+        this.mostrarExito('Perfil actualizado ✔');
+      }
+
+      actualizarUsuarioLogueado(perfil) {
+        const usr = JSON.parse(localStorage.getItem('usuarioLogueado'));
+        if (usr && perfil.nombre) {
+          usr.nombre = perfil.nombre;
+          localStorage.setItem('usuarioLogueado', JSON.stringify(usr));
+        }
+      }
+
+      mostrarCompras() {
+        const compras = JSON.parse(localStorage.getItem(this.COMPRAS_KEY)) || [];
+        if (!compras.length) {
+          this.elementos.sinCompras.classList.remove('d-none');
+          return;
+        }
+        this.elementos.sinCompras.classList.add('d-none');
+        this.elementos.tablaCompras.innerHTML = '';
+        compras
+          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+          .forEach((c, i) => this.elementos.tablaCompras.appendChild(this.crearFilaCompra(c, i)));
+      }
+
+      crearFilaCompra(c, i) {
+        const total = (c.items || []).reduce((s, it) => s + it.precio * it.cantidad, 0);
+        const productos = (c.items || []).map(it => `${it.nombre} ×${it.cantidad}`).join(', ') || 'Sin productos';
+        const fecha = new Date(c.fecha).toLocaleString('es-CL', {
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit'
+        });
+        const r = document.createElement('tr');
+        r.innerHTML = `
+          <th scope="row" class="text-center">${i + 1}</th>
+          <td>${fecha}</td>
+          <td><small class="text-muted">${productos}</small></td>
+          <td class="text-end fw-bold">$${total.toLocaleString('es-CL')}</td>
+        `;
+        return r;
+      }
+
+      cerrarSesion(e) {
+        e.preventDefault();
+        if (confirm('¿Cerrar sesión?')) {
+          localStorage.removeItem('usuarioLogueado');
+          this.mostrarExito('Sesión cerrada ✔');
+          setTimeout(() => window.location.href = '/login', 800);
+        }
+      }
+
+      mostrarExito(msg) {
+        const a = this.elementos.alertGuardado;
+        a.textContent = msg;
+        a.className = 'alert alert-success';
+        a.classList.remove('d-none');
+        setTimeout(() => a.classList.add('d-none'), 3000);
+      }
+
+      mostrarError(msg) {
+        const a = this.elementos.alertGuardado;
+        if (a) {
+          a.textContent = msg;
+          a.className = 'alert alert-danger';
+          a.classList.remove('d-none');
+          setTimeout(() => a.classList.add('d-none'), 5000);
+        } else {
+          alert(msg);
+        }
+      }
+
+      redirigirLogin() {
+        window.location.href = 'login.html';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => new PerfilManager());
+  </script>
+</body>
+</html>
