@@ -1,39 +1,127 @@
-# Ferreplus0.1
-Speed run del trabajo. Objetivo: El 4.0
+# 🛠️ Proyecto Final FERREPLUS — ASY5131 (Duoc UC)
 
+## 📘 Contexto del Proyecto
 
- PASO A PASO 
+FERREPLUS es una plataforma de comercio electrónico desarrollada para "FERREMAS", una distribuidora de productos de ferretería y construcción con presencia nacional.  
+Debido a la pandemia y la baja en ventas físicas, FERREMAS decidió implementar un sistema de ventas online para mejorar su eficiencia operativa y experiencia de usuario.
 
-0.1 Tener instalado: 
+---
 
-- Python 3.10.9 link: https://www.python.org/downloads/release/python-3109/
-- XAMPP con MySQL activo y apache
-- En extensiones de vs code instalar: MariaDB, y MySQLTools
+## 🧩 ¿Qué hace el sistema?
 
+- Catálogo de productos con stock en tiempo real
+- Carrito de compras con integración WebPay (Sandbox)
+- Registro y login de clientes
+- Login para administradores, vendedores, bodegueros y contadores
+- Módulo de despacho a domicilio o retiro en tienda
+- Registro de contacto y seguimiento
+- API REST para productos (consumo interno y externo)
 
-1. Extraer todos los .zip ya que son las carpetas que deben estar
-    dentro de la carpeta "ferreplus"
-   
-2. Crear entorno virtual:  python -m venv venv
+---
 
-3. Activar entorno virtual:  .\venv\Scripts\Activate
+## ⚙️ Paso a paso para ejecutar el sistema
 
-4. Instalar dependencias:
-   pip install --upgrade pip
+### 🔧 Requisitos:
+
+- Python 3.10+
+- XAMPP (para importar la base de datos ferremas_plus.sql usando phpMyAdmin)
+- MySQL 8.0+ (incluido en XAMPP)
+- Ngrok (ya incluido en el repositorio)
+- Entorno virtual (`venv`)
+- Navegador Web
+
+### 🛠️ Instalación:
+
+1. Clona el repositorio o descarga los archivos
+2. Crea un entorno virtual y actívalo:
+
+   ```bash
+   python -m venv venv
+   .\venv\Scripts\activate
+   ```
+
+3. Instala las dependencias:
+
+   ```bash
    pip install -r requirements.txt
+   ```
 
-5. Abrir el MyphpAdmin de XAMPP haciendo click en "admin" en MYsql XAMPP
-6. Apretar en la seccion importar y seleccionar el archivo ferremas.sql
+4. Cargar la base de datos:
 
-7. Abrir dos terminales, en una usar ngrok.exe con el codigo: ngrok https 8000  
-7.1 Ejecutar programa con: .\start_ferreplus.bat
+   - Abre **phpMyAdmin** y crea una base de datos nueva llamada `ferremas`
+   - Luego, ve a la pestaña **"Importar"** y selecciona el archivo `ferremas_plus.sql` incluido en este repositorio
 
-8. Disfruta :)
+5. Crea el usuario administrador ejecutando:
 
-9. (Puede ser que haya que instalar el pip transbank-sdk)
+   ```bash
+   python crear_admin.py
+   ```
+
+6. Configura el archivo `.env` en la raíz del proyecto (en caso de ser necesario):
+
+   ```env
+   DATABASE_URL=mysql+pymysql://root:tu_clave@localhost/ferremas
+   API_KEY=clave_webpay_entregada
+   RETURN_URL=https://TU_URL_PUBLICA.ngrok.io/webpay/retorno
+   WEB_PAY_URL_RETURN=https://TU_URL_PUBLICA.ngrok.io/pago_ex.html
+   ```
+
+---
+
+### ▶️ Iniciar el sistema:
+
+```bash
+.\start_ferreplus.bat
+```
+
+Este script:
+- Inicia `ngrok` para exponer tu app públicamente
+- Inicia FastAPI (modo `uvicorn`)
+- Imprime la URL pública en consola
+
+---
+
+### 🌐 Accede en tu navegador:
+
+```
+https://TU_URL_PUBLICA.ngrok.io/
+```
+
+Desde ahí puedes:
+- Ver productos
+- Registrarte como cliente
+- Comprar con WebPay
+- Iniciar sesión como admin o vendedor
+- Credenciales admin
+    Correo: admin@ferremas.cl Contraseña: admin123
+- Credenciales cliente
+    Correo: Tiagopzk00@gmail.com Contraseña: cliente123
 
 
-Objetivos: 
-.Falta comprobar si los endpoints se guardan en la base de datos
-.Hay que arreglar el endpoint login ya que no devuelve token
-.El pinche webpay sigue sin aparecer aunque ya esta todo instalado supuestamente
+---
+
+### 🧪 Pruebas y validaciones
+
+- Validaciones de stock
+- Manejo de tokens WebPay
+- Redirecciones seguras
+- Integración completa cliente → carrito → pago → backend
+- API lista para ser usada desde Postman o frontend externo
+
+---
+
+### 👨‍👩‍👧‍👦 Roles del sistema
+
+- **Cliente**: compra productos y recibe descuentos
+- **Administrador**: gestiona usuarios y reportes
+- **Vendedor**: aprueba pedidos y coordina entregas
+- **Bodeguero**: despacha productos
+- **Contador**: confirma pagos por transferencia
+
+---
+
+## 📩 Contacto
+
+Autor: Hector Shulcz - Ignacio Lopez - Josue Garcia
+Correo: [jos.garciag@duocuc.cl]  
+Sección: 002D | Grupo: 6
