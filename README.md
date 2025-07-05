@@ -91,11 +91,17 @@ Desde ahí puedes:
 - Ver productos
 - Registrarte como cliente
 - Comprar con WebPay
+- Credenciales WebPay
+   Numero tarjeta: 4051 8856 0044 6623
+   MM/AA: cualquiera
+   CVV: 123
+   Rut: 11.111.111-1
+   Clave: 123
 - Iniciar sesión como admin o vendedor
 - Credenciales admin
-    Correo: admin@ferremas.cl Contraseña: admin123
+   Correo: admin@ferremas.cl Contraseña: admin123
 - Credenciales cliente
-    Correo: Tiagopzk00@gmail.com Contraseña: cliente123
+   Correo: Tiagopzk00@gmail.com Contraseña: cliente123
 
 
 ---
